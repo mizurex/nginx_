@@ -1,29 +1,47 @@
-name: Build and push image
+name: Build and Push
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    branches: [dev, main]
 
 permissions:
   contents: read
   packages: write
 
 jobs:
-  publish_images:
+  build-dev:
+    if: github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/app_1:latest .
+      - name: Build Dev Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp-dev:latest -f ./Docker/Dockerfile.dev .
 
-      - name: Login to Docker Hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Login to DockerHub
+        run: |
+          echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/app_1:latest
+      - name: Push Dev Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/myapp-dev:latest
+
+  
+  build-prod:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Prod Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp-prod:latest -f ./Docker/Dockerfile.prod .
+
+      - name: Login to DockerHub
+        run: |
+          echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Push Prod Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/myapp-prod:latest

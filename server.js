@@ -4,7 +4,6 @@ import v1Router from "./routes/v1/index.js";
 import { createClient } from "redis";
 
 const app = express();
-const PORT = 3000;
 
 const dup = process.env.APP_NAME;
 
@@ -51,9 +50,6 @@ app.post('/api/v1/data',async (req, res) => {
   
 });
 
-
-
-
 app.use('/api/v1', v1Router);
 app.use((req, res) => {
   res.status(404).json({ 
@@ -62,7 +58,7 @@ app.use((req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT || 3000), () => {
   console.log(`${dup} running on http://localhost:${PORT}`);
-});
+};
 
