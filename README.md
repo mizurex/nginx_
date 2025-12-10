@@ -1,5 +1,8 @@
 ## Multi Environment Node.js Deployment
 
+<img width="1666" height="1552" alt="Untitled (10)" src="https://github.com/user-attachments/assets/0678fa48-b929-4a61-bf49-44686e82104c" />
+
+
 This project demonstrates a complete multi-environment deployment pipeline for a Node.js backend, using:
 
 - GitHub Actions (CI/CD)
